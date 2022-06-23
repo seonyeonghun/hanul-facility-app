@@ -1,6 +1,6 @@
 import './App.css';
 import {useRef, useState} from 'react';
-import {signUp, useAuth, logOut} from './Firebase';
+import {signUp, useAuth, logIn, logOut} from './Firebase';
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -13,6 +13,16 @@ function App() {
       await signUp(emailRef.current.value, passwordRef.current.value);
     } catch {
       alert('이미 사용중인 이메일 입니다!')
+    }
+    setLoading(false);
+  }
+
+  async function handleLogin() {
+    setLoading(true);
+    try {
+      await logIn(emailRef.current.value, passwordRef.current.value);
+    } catch {
+      alert('email 또는 password를 확인하세요!')
     }
     setLoading(false);
   }
@@ -34,8 +44,9 @@ function App() {
           <input ref={emailRef} type="email" placeholder="email" />
           <input ref={passwordRef} type="password" placeholder="password" />
         </div>
-        <button disabled={loading || currentUser != null} onClick={handleSignUp}>sign up</button>
-        <button onClick={handleLogout}>log out</button>
+        <button disabled={loading || currentUser} onClick={handleSignUp}>sign up</button>
+        <button disabled={loading || currentUser} onClick={handleLogin}>Log in</button>
+        <button disabled={loading || !currentUser} onClick={handleLogout}>Log out</button>
       </form>
     </div>
   );
